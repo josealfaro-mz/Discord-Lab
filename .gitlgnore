@@ -1,0 +1,26 @@
+# Entornos virtuales
+mi_entorno/
+.venv/
+venv/
+env/
+.env
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Herramientas de pruebas y analisis
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Configuracion local del editor/sistema
+.vscode/
+.idea/
+.DS_Store
