@@ -3,6 +3,10 @@ import os
 import re
 from dotenv import load_dotenv
 
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from practica01.gestor_comando import analizar_comando
+
 def mostrar_bienvenida():
     """Retorna la lista de comandos disponibles."""
     return (
@@ -32,6 +36,8 @@ def main(entrada):
             print(mostrar_bienvenida())
             return mostrar_bienvenida()
             
+        elif comando in ["definir", "validar", "hora", "ayuda"]:
+            return analizar_comando(entrada)
             
         else:
             print(f" Error: Comando '!{comando}' no reconocido.")
@@ -73,6 +79,15 @@ async def on_message(message):
         
         # 4. Respuesta: El bot escribe el resultado en el mismo canal
         await message.channel.send(f" **Bot Procesador:** {resultado}")
+
+    #Procesador de comandos
+
+    if message.content.startswith('!'):
+        if any(message.content.lower().startswith(f'!{cmd}') for cmd in ["definir", "validar", "hora", "ayuda"]):
+            resultado = analizar_comando(message.content)
+            print(f"Resultado del procesamiento: {resultado}")
+            await message.channel.send(f" **Bot Procesador:** {resultado}")
+
     
 # Ejecutar el bot
 if __name__ == "__main__":
