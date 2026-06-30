@@ -1,7 +1,7 @@
 # control.py
 # Tema 2: estructuras de control (ciclos y condicionales).
-# La idea de estas funciones es que el user me manda un pedacito de codigo
-# y yo lo reviso para decirle si lo escribio bien o que le falta. Uso el
+# La idea de estas funciones es que el usuario mande un pedacito de codigo
+# y el agente lo revisa para decirle si lo escribio bien o que le falta. Uso el
 # modulo re (expresiones regulares) para buscar las partes importantes.
 
 import re
