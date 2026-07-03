@@ -1,21 +1,21 @@
 # importo todas las funciones de los otros modulos (uno por cada tema)
-from src.sintaxis_basica.sintaxis import (
+from sintaxis_basica.sintaxis import (
     mostrar_palabras_reservadas,
     mostrar_identificadores,
     mostrar_tipos_datos,
     validar_variable,
 )
-from src.estructuras_control.control import (
+from estructuras_control.control import (
     evaluar_ciclo_for,
     evaluar_ciclo_while,
     evaluar_condicional,
 )
-from src.estructuras_datos.tareas import (
+from estructuras_datos.tareas import (
     agregar_tarea,
     listar_tareas,
     eliminar_tarea,
 )
-from src.manejo_excepciones.excepciones import (
+from manejo_excepciones.excepciones import (
     ejecutar_suma,
     ejecutar_multiplicacion,
 )
