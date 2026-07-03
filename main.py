@@ -41,18 +41,18 @@ def mostrar_menu():
     menu = (
         "**Soy tu bot tutor de Python**\n"
         "Estos son mis comandos:\n"
-        "!palabras - palabras reservadas\n"
-        "!identificadores - reglas de los nombres\n"
-        "!tipos - tipos de datos\n"
-        "!validar <nombre> - reviso si un nombre de variable sirve\n"
-        "!for <codigo> - reviso un ciclo for\n"
-        "!while <codigo> - reviso un ciclo while\n"
-        "!condicional <codigo> - reviso un if\n"
-        "!agregar <tarea> - guardo una tarea\n"
-        "!tareas - veo mis tareas\n"
-        "!eliminar <numero> - borro una tarea\n"
-        "!sumar <a> <b> - sumo dos numeros\n"
-        "!multiplicar <a> <b> - multiplico dos numeros"
+        "palabras - palabras reservadas\n"
+        "identificadores - reglas de los nombres\n"
+        "tipos - tipos de datos\n"
+        "validar <nombre> - reviso si un nombre de variable sirve\n"
+        "for <codigo> - reviso un ciclo for\n"
+        "while <codigo> - reviso un ciclo while\n"
+        "condicional <codigo> - reviso un if\n"
+        "agregar <tarea> - guardo una tarea\n"
+        "tareas - veo mis tareas\n"
+        "eliminar <numero> - borro una tarea\n"
+        "sumar <a> <b> - sumo dos numeros\n"
+        "multiplicar <a> <b> - multiplico dos numeros"
     )
     return menu
 
@@ -83,7 +83,13 @@ async def on_message(mensaje):
         return
 
     # solo respondo si el mensaje empieza con "!", asi no contesta a todo
-    if mensaje.content.startswith("!"):
+    
+    if mensaje.content == "hola":
+        await mensaje.channel.send("Hola! Soy tu bot tutor de Python. Escribe menu para ver lo que puedo hacer.")
+        return
+    elif mensaje.content == "menu":
+        await mensaje.channel.send(mostrar_menu())
+    else:
         respuesta = procesar_mensaje(mensaje.content)   # Pasos 1 al 4
         await mensaje.channel.send(respuesta)           # PASO 5: le contesto
 

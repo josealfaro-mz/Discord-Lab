@@ -14,6 +14,8 @@ def clasificar_intencion(texto):
     # le quito el "!" del inicio por si lo trae, para comparar mas facil
     comando = comando.replace("!", "")
 
+    print(f"clasificar_intencion: comando = {comando}")
+
     """
     aqui relaciono lo que escribe el usuario con el nombre de la intencion.
     pongo varias palabras parecidas para que no tenga que escribir exacto.
