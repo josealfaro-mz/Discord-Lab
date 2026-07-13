@@ -1,11 +1,3 @@
-# generador_cuestionario.py
-# Este modulo es el que me permite recibir texto libre, como "hazme un
-# cuestionario de listas" o "quiero un quiz de excepciones", y regresar un
-# cuestionario ya armado. Todo esto es LOCAL: no llamo a ninguna API de
-# internet ni de inteligencia artificial, solo uso expresiones regulares (re)
-# para sacar el tema de la frase, y un diccionario con preguntas que yo
-# mismo redacte para los temas que doy en el curso.
-
 import re
 
 # Banco de preguntas para los temas que si cubro a fondo en el curso.
