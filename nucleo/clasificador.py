@@ -8,6 +8,14 @@ regresa el nombre de la intencion. Asi el agente sabe que herramienta usar.
 def clasificar_intencion(texto):
     texto = texto.strip().lower()
 
+    # NUEVO: si el mensaje trae texto libre pidiendo un cuestionario/quiz/examen
+    # (no necesariamente al inicio del mensaje, ej. "hazme un cuestionario de listas"),
+    # lo mando directo a esa intencion antes de revisar el comando de la primera palabra.
+    palabras_cuestionario = ["cuestionario", "quiz", "examen", "preguntas de", "preguntas sobre"]
+    for palabra in palabras_cuestionario:
+        if palabra in texto:
+            return "generar_cuestionario"
+
     # me quedo solo con la primera palabra, que es el comando (ej: "!validar")
     comando = texto.split(" ")[0]
 

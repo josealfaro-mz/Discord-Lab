@@ -19,6 +19,7 @@ from manejo_excepciones.excepciones import (
     ejecutar_suma,
     ejecutar_multiplicacion,
 )
+from nucleo.generador_cuestionario import generar_cuestionario
 
 
 """
@@ -74,5 +75,9 @@ TOOLKIT = {
     "ejecutar_multiplicacion": {
         "funcion": ejecutar_multiplicacion,
         "descripcion": "Multiplica dos numeros (con manejo de errores).",
+    },
+    "generar_cuestionario": {
+        "funcion": generar_cuestionario,
+        "descripcion": "Arma un cuestionario de texto libre sobre el tema que pidas.",
     },
 }

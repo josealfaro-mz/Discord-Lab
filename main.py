@@ -28,8 +28,15 @@ def procesar_mensaje(texto_usuario):
     # PASO 3: busco la intencion en mi caja de herramientas (TOOLKIT)
     if intencion in TOOLKIT:
         herramienta = TOOLKIT[intencion]["funcion"]
-        # PASO 4: ejecuto la funcion y le paso el argumento que escribio el user
-        resultado = herramienta(argumento)
+
+        # el cuestionario es texto libre, asi que el tema puede estar en
+        # cualquier parte de la frase (no solo despues de la primera palabra).
+        # Por eso aqui le mando el mensaje completo en vez de solo "argumento".
+        if intencion == "generar_cuestionario":
+            resultado = herramienta(texto_limpio)
+        else:
+            # PASO 4: ejecuto la funcion y le paso el argumento que escribio el user
+            resultado = herramienta(argumento)
         return resultado
 
     # si no reconoci el comando, le aviso y le sugiero el menu
@@ -52,7 +59,8 @@ def mostrar_menu():
         "tareas - veo mis tareas\n"
         "eliminar <numero> - borro una tarea\n"
         "sumar <a> <b> - sumo dos numeros\n"
-        "multiplicar <a> <b> - multiplico dos numeros"
+        "multiplicar <a> <b> - multiplico dos numeros\n"
+        "hazme un cuestionario de <tema> - te armo un cuestionario de ese tema"
     )
     return menu
 
