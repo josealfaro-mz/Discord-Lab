@@ -1,59 +1,76 @@
-"""
-Este es el "cerebro" que decide que quiere el user (Paso 2 del diagrama).
-Recibe el texto que se escribe y viendo la primera palabra (el comando),
-regresa el nombre de la intencion. Asi el agente sabe que herramienta usar.
-"""
+import re
+import unicodedata
+
+
+def _normalizar(texto):
+    texto = unicodedata.normalize("NFD", texto)
+    return "".join(c for c in texto if unicodedata.category(c) != "Mn")
+
+
+def _palabras(texto):
+    return re.findall(r"[a-z]+", texto)
+
+
+def _hay_raiz(palabras, raiz):
+    for palabra in palabras:
+        if palabra.startswith(raiz):
+            return True
+    return False
 
 
 def clasificar_intencion(texto):
-    texto = texto.strip().lower()
+    texto = _normalizar(texto.strip().lower())
+    palabras = _palabras(texto)
 
-    # NUEVO: si el mensaje trae texto libre pidiendo un cuestionario/quiz/examen
-    # (no necesariamente al inicio del mensaje, ej. "hazme un cuestionario de listas"),
-    # lo mando directo a esa intencion antes de revisar el comando de la primera palabra.
-    palabras_cuestionario = ["cuestionario", "quiz", "examen", "preguntas de", "preguntas sobre"]
-    for palabra in palabras_cuestionario:
-        if palabra in texto:
-            return "generar_cuestionario"
+    print(f"clasificar_intencion: texto = {texto}")
 
-    # me quedo solo con la primera palabra, que es el comando (ej: "!validar")
-    comando = texto.split(" ")[0]
+    if _hay_raiz(palabras, "cuestionari") or _hay_raiz(palabras, "quiz") or _hay_raiz(palabras, "examen") or _hay_raiz(palabras, "pregunt"):
+        return "generar_cuestionario"
 
-    # le quito el "!" del inicio por si lo trae, para comparar mas facil
-    comando = comando.replace("!", "")
-
-    print(f"clasificar_intencion: comando = {comando}")
-
-    """
-    aqui relaciono lo que escribe el usuario con el nombre de la intencion.
-    pongo varias palabras parecidas para que no tenga que escribir exacto.
-    """
-    if comando in ["palabras", "reservadas"]:
+    if _hay_raiz(palabras, "reservad"):
         return "palabras_reservadas"
-    elif comando in ["identificadores", "identificador"]:
+
+    if _hay_raiz(palabras, "identific"):
         return "identificadores"
-    elif comando in ["tipos", "datos"]:
+
+    if _hay_raiz(palabras, "tipo") and _hay_raiz(palabras, "dato"):
         return "tipos_datos"
-    elif comando in ["validar", "variable"]:
-        return "validar_variable"
-    elif comando in ["for"]:
-        return "evaluar_ciclo_for"
-    elif comando in ["while"]:
-        return "evaluar_ciclo_while"
-    elif comando in ["condicional", "if"]:
-        return "evaluar_condicional"
-    elif comando in ["agregar", "tarea"]:
-        return "agregar_tarea"
-    elif comando in ["tareas", "listar"]:
+
+    tiene_tarea = _hay_raiz(palabras, "tarea")
+    tiene_agregar = _hay_raiz(palabras, "agreg") or _hay_raiz(palabras, "anad") or _hay_raiz(palabras, "guarda")
+    tiene_eliminar = _hay_raiz(palabras, "elimin") or _hay_raiz(palabras, "borr") or _hay_raiz(palabras, "quita")
+
+    if tiene_tarea and not tiene_agregar and not tiene_eliminar:
         return "listar_tareas"
-    elif comando in ["eliminar", "borrar"]:
-        return "eliminar_tarea"
-    elif comando in ["sumar", "suma"]:
-        return "ejecutar_suma"
-    elif comando in ["multiplicar", "multiplicacion"]:
-        return "ejecutar_multiplicacion"
-    elif comando in ["ayuda", "menu", "comandos"]:
+
+    if _hay_raiz(palabras, "ayud") or _hay_raiz(palabras, "menu") or _hay_raiz(palabras, "comand"):
         return "menu"
+
+    comando = texto.split(" ")[0].replace("!", "")
+
+    if comando.startswith("palabra") or comando.startswith("reservad"):
+        return "palabras_reservadas"
+    elif comando.startswith("identific"):
+        return "identificadores"
+    elif comando.startswith("tipo") or comando.startswith("dato"):
+        return "tipos_datos"
+    elif comando.startswith("valid") or comando.startswith("variable"):
+        return "validar_variable"
+    elif comando.startswith("for"):
+        return "evaluar_ciclo_for"
+    elif comando.startswith("while"):
+        return "evaluar_ciclo_while"
+    elif comando.startswith("condicional") or comando == "if":
+        return "evaluar_condicional"
+    elif comando.startswith("agreg") or comando.startswith("anad") or comando.startswith("guarda"):
+        return "agregar_tarea"
+    elif comando.startswith("tarea") or comando.startswith("list"):
+        return "listar_tareas"
+    elif comando.startswith("elimin") or comando.startswith("borr") or comando.startswith("quita"):
+        return "eliminar_tarea"
+    elif comando.startswith("sum"):
+        return "ejecutar_suma"
+    elif comando.startswith("multiplic"):
+        return "ejecutar_multiplicacion"
     else:
-        # si no se reconoce el comando, regresa "desconocida"
         return "desconocida"

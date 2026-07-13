@@ -1,3 +1,11 @@
+# generador_cuestionario.py
+# Este modulo es el que me permite recibir texto libre, como "hazme un
+# cuestionario de listas" o "quiero un quiz de excepciones", y regresar un
+# cuestionario ya armado. Todo esto es LOCAL: no llamo a ninguna API de
+# internet ni de inteligencia artificial, solo uso expresiones regulares (re)
+# para sacar el tema de la frase, y un diccionario con preguntas que yo
+# mismo redacte para los temas que doy en el curso.
+
 import re
 
 # Banco de preguntas para los temas que si cubro a fondo en el curso.
@@ -76,26 +84,24 @@ ALIAS_TEMAS = {
 
 
 def _buscar_tema(texto_original):
-    """Intento sacar el tema del cuestionario de la frase libre que escribio
-    el usuario. Busco lo que sigue despues de palabras como 'de', 'sobre'
-    o 'acerca de', usando expresiones regulares."""
-    texto = " " + texto_original.lower().strip() + " "  # espacios de sobra ayudan al alias " for "
+    texto = texto_original.lower().strip()
 
-    patrones = [
-        r"cuestionario\s+(?:de|sobre|acerca de)\s+(.+)",
-        r"quiz\s+(?:de|sobre|acerca de)\s+(.+)",
-        r"examen\s+(?:de|sobre|acerca de)\s+(.+)",
-        r"preguntas\s+(?:de|sobre|acerca de)\s+(.+)",
-    ]
+    patron = r"(?:cuestionario|quiz|examen|preguntas?)\w*\s+(.*)"
+    coincidencia = re.search(patron, texto)
+    if not coincidencia:
+        return ""
 
-    for patron in patrones:
-        coincidencia = re.search(patron, texto)
-        if coincidencia:
-            tema = coincidencia.group(1).strip()
-            tema = tema.strip(" .,!?")  # le quito signos que se le peguen al final
-            return tema
+    resto = coincidencia.group(1).strip()
+    conectores = ["acerca de", "el tema de", "algo de", "sobre", "de", "del", "para", "un", "una"]
+    cambiado = True
+    while cambiado:
+        cambiado = False
+        for conector in conectores:
+            if resto.startswith(conector + " "):
+                resto = resto[len(conector) + 1:]
+                cambiado = True
 
-    return ""  # si no encontre ningun patron, regreso vacio
+    return resto.strip(" .,!?")
 
 
 def _identificar_tema_conocido(tema_libre):
